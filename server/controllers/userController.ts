@@ -1,12 +1,14 @@
 import { Request, Response, NextFunction } from "express"
 import bigPromise from "../middlewares/bigPromise"
-var mongoose = require('mongoose');
 import UserModel from "../models/userModel";
 import PostModel from "../models/postModel";
 
 
 export const signup = bigPromise(async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
+
+    console.log(req.body)
+
     let user = await UserModel.create({
         name,
         email,
@@ -30,6 +32,9 @@ export const signup = bigPromise(async (req: Request, res: Response) => {
 
 export const login = bigPromise(async (req: Request, res: Response) => {
     const { email, password } = req.body;
+
+    // sleep func
+    // await new Promise((res) => setTimeout(() => res(6), 3000))
 
     let user = await UserModel.findOne({ email }).select("+password");
 
@@ -66,8 +71,8 @@ export const getUserDetails = bigPromise(async (req: Request, res: Response) => 
 });
 
 export const createPost = bigPromise(async (req: Request, res: Response) => {
-    const { description, photoUrl, tagUsers } = req.body;
-    let post = await PostModel.create({ description, photoUrl, belongsTo: req?.user?.id, tagUsers })
+    const { description, photoUrl, tagUsersId } = req.body;
+    let post = await PostModel.create({ description, photoUrl, belongsTo: req?.user?.id, tagUsers: tagUsersId })
 
     res.status(200).json({
         data: post,
@@ -120,9 +125,6 @@ export const getuserFeed = bigPromise(async (req: Request, res: Response) => {
     let userFeedPosts = await PostModel.find({
         $or: [
             { belongsTo: req?.user?.id },
-            // {
-            //     belongsTo: { $in: req?.user?.followers.map(id => id) }
-            // },
             {
                 belongsTo: { $in: req?.user?.followings.map(id => id) }
             }

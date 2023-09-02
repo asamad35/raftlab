@@ -3,6 +3,8 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { BiUserCircle } from "react-icons/bi"
 import { useState } from "react"
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { postSignup } from "../../redux/thunk/authThunk";
 
 interface UserDetails {
     name: string,
@@ -12,6 +14,8 @@ interface UserDetails {
 const Signup = () => {
     const [userDetails, setUserDetails] = useState<UserDetails>({ name: "", email: "", password: "" })
     const navigate = useNavigate();
+    const dispatch = useAppDispatch()
+    const authButtonStatus = useAppSelector((state) => state.authReducer.authButtonState)
 
     return (
         <section className="flex items-center justify-center bg-gradient-to-t from-blue-500 to-cyan-500 w-screen h-screen ">
@@ -47,7 +51,7 @@ const Signup = () => {
                     />
                 </div>
 
-                <button className="mx-auto flex bg-gradient-to-l from-blue-500 to-cyan-500 text-white text-xl px-8 py-2 mt-6 mb-4 rounded-full ">
+                <button onClick={() => { dispatch(postSignup(userDetails)) }} className={`mx-auto flex bg-gradient-to-l from-blue-500 to-cyan-500 text-white text-xl px-8 py-2 mt-6 mb-4 rounded-full ${authButtonStatus === "loading" ? "opacity-60 pointer-events-none" : ""} `} >
                     Signup
                 </button>
                 <p className="text-center">

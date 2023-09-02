@@ -3,10 +3,10 @@ import { useAppSelector } from '../hooks'
 import { Outlet, Navigate } from 'react-router'
 
 const ProtectedRoute = () => {
-    const userReducer = useAppSelector((state) => state.userReducer)
+    const authReducer = useAppSelector((state) => state.authReducer)
 
     return (
-        userReducer.token ? <Outlet /> : <Navigate to="/login" />
+        authReducer.token ? <Outlet /> : <Navigate to="/login" />
     )
 }
 

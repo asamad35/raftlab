@@ -2,6 +2,8 @@ import { useState } from "react"
 import { AiOutlineMail } from "react-icons/ai"
 import { RiLockPasswordLine } from "react-icons/ri"
 import { useNavigate } from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "../../hooks"
+import { postLogin } from "../../redux/thunk/authThunk"
 
 interface UserDetails {
   email: string,
@@ -9,8 +11,9 @@ interface UserDetails {
 }
 
 const Login = () => {
-  const [userDetails, setUserDetails] = useState<UserDetails>({ email: "", password: "" })
-
+  const [userDetails, setUserDetails] = useState<UserDetails>({ email: "samad.abdus3535@gmail.com", password: "123456" })
+  const dispatch = useAppDispatch()
+  const authButtonStatus = useAppSelector((state) => state.authReducer.authButtonState)
   const navigate = useNavigate()
 
   return (
@@ -31,7 +34,7 @@ const Login = () => {
           <input value={userDetails.password} onChange={(e) => { setUserDetails({ ...userDetails, password: e.target.value }) }} className="outline-none w-full bg-inherit" type="password" placeholder="Password" />
         </div>
 
-        <button className="mx-auto flex bg-gradient-to-l from-blue-500 to-cyan-500 text-white text-xl px-8 py-2 mt-6 mb-4 rounded-full "> Login </button>
+        <button onClick={() => { dispatch(postLogin(userDetails)) }} className={`mx-auto flex bg-gradient-to-l from-blue-500 to-cyan-500 text-white text-xl px-8 py-2 mt-6 mb-4 rounded-full ${authButtonStatus === "loading" ? "opacity-60 pointer-events-none" : ""} `} >Login </button>
         <p className="text-center" > Don't have an account? <span onClick={() => { navigate("/signup") }} className="font-bold cursor-pointer"> Sign up </span ></p>
       </div>
 
