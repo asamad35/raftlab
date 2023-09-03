@@ -6,7 +6,7 @@ interface Post {
     description: string;
     photoUrl?: string
     likes: [User]
-    comments: [User]
+    comments: [{ user: User, commentText: string, timeStamp: number }]
     reposts: [User]
     likesCount: number
     commentsCount: number
@@ -23,7 +23,6 @@ const postSchema = new mongoose.Schema<Post, PostModel>({
     },
     photoUrl: {
         type: String,
-        default: "https://static.thenounproject.com/png/3465604-200.png",
     },
     likesCount: {
         type: Number,
@@ -51,6 +50,10 @@ const postSchema = new mongoose.Schema<Post, PostModel>({
         commentText: {
             type: String,
             required: true,
+        },
+        timeStamp: {
+            type: Number,
+            default: Date.now,
         }
     }],
     reposts: [{

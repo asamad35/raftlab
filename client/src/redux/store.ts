@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import authReducer from './slices/authSlice'
+import postReducer from './slices/postSlice'
 import { createLogger } from 'redux-logger'
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
@@ -13,6 +14,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     authReducer,
+    postReducer,
 });
 
 

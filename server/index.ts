@@ -2,7 +2,7 @@ require("dotenv").config();
 import app from "./app"
 import connectWithDb from "./config";
 import { User } from "./models/userModel";
-// const cloudinary = require("cloudinary");
+import { v2 as cloudinary } from 'cloudinary';
 
 const port = process.env.port;
 
@@ -27,13 +27,13 @@ declare global {
     }
 }
 
-
 // cloudinary config
-// cloudinary.config({ 
-//     cloud_name: process.env.CLOUDINARY_NAME,
-//     api_key: process.env.CLOUDINARY_KEY,
-//     api_secret: process.env.CLOUDINARY_SECRET,
-// });
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+    secure: true,
+});
 
 app.listen(3001, () => {
     console.log(`server is running at port 3001`);

@@ -2,22 +2,25 @@ import { createSlice } from '@reduxjs/toolkit'
 import { postLogin, postSignup } from '../thunk/authThunk'
 
 // Define a type for the slice state
-interface UserState {
-    loggedUser: {
-        _id: string,
-        name: string,
-        email: string,
-        status: string,
-        photoUrl: string,
-        followers: [string],
-        followings: [string],
-    }
+
+export interface UserState {
+    _id: string,
+    name: string,
+    email: string,
+    status: string,
+    photoUrl: string,
+    followers: [string],
+    followings: [string],
+}
+
+export interface AuthUserState {
+    loggedUser: UserState
     token: string,
     authButtonState: string
 }
 
 // Define the initial state using that type
-const initialState: UserState = {
+const initialState: AuthUserState = {
     loggedUser: {
         _id: "",
         name: "",

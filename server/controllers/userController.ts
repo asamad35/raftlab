@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from "express"
 import bigPromise from "../middlewares/bigPromise"
 import UserModel from "../models/userModel";
 import PostModel from "../models/postModel";
-
+import { v2 as cloudinary } from "cloudinary";
+import { UploadedFile } from "express-fileupload";
 
 export const signup = bigPromise(async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
@@ -71,12 +72,34 @@ export const getUserDetails = bigPromise(async (req: Request, res: Response) => 
 });
 
 export const createPost = bigPromise(async (req: Request, res: Response) => {
-    const { description, photoUrl, tagUsersId } = req.body;
-    let post = await PostModel.create({ description, photoUrl, belongsTo: req?.user?.id, tagUsers: tagUsersId })
+    let { description, postPhotoUrl, tagUsersIds } = req.body;
+
+    let uploadedFileObject = null
+
+    if (req.files) {
+        const postPhoto = req.files.postPhoto as UploadedFile
+
+        console.log(postPhoto)
+        uploadedFileObject = await cloudinary.uploader.upload(
+            postPhoto.tempFilePath,
+            {
+                folder: "raftlab",
+            }
+        );
+    }
+
+    console.log(uploadedFileObject?.secure_url)
+
+    const post = await PostModel.create({ description, photoUrl: uploadedFileObject?.secure_url ?? postPhotoUrl, belongsTo: req?.user?.id, tagUsers: tagUsersIds })
+
+    let populatedPost = await PostModel.findById(post._id).populate({
+        path: 'comments',
+        populate: { path: 'user' }
+    }).populate('likes').populate('reposts').populate('belongsTo')
 
     res.status(200).json({
-        data: post,
-        message: "created post",
+        data: populatedPost,
+        message: "updated post list",
     });
 });
 
@@ -95,8 +118,9 @@ export const updatePost = bigPromise(async (req: Request, res: Response) => {
             }
             break
         }
+
         case 'comment': {
-            updateQuery = { $inc: { commentsCount: 1 }, $push: { comments: { user: userId, commentText: comment } } }
+            updateQuery = { $inc: { commentsCount: 1 }, $push: { comments: { $each: [{ user: userId, commentText: comment }], $position: 0 } } }
             break
         }
         case 'repost': {
@@ -105,7 +129,10 @@ export const updatePost = bigPromise(async (req: Request, res: Response) => {
         }
     }
 
-    const updatedPost = await PostModel.findByIdAndUpdate({ _id: postId }, updateQuery, { returnDocument: "after" })
+    const updatedPost = await PostModel.findByIdAndUpdate({ _id: postId }, updateQuery, { returnDocument: "after" }).populate({
+        path: 'comments',
+        populate: { path: 'user' }
+    }).populate('likes').populate('reposts').populate('belongsTo')
 
     res.status(200).json({
         data: updatedPost,
@@ -114,7 +141,11 @@ export const updatePost = bigPromise(async (req: Request, res: Response) => {
 });
 
 export const getUserPosts = bigPromise(async (req: Request, res: Response) => {
-    let posts = await PostModel.find({ belongsTo: req?.user?.id })
+    let posts = await PostModel.find({ belongsTo: req?.user?.id }).populate({
+        path: 'comments',
+        populate: { path: 'user' }
+    }).populate('likes').populate('reposts').populate('belongsTo')
+
     res.status(200).json({
         data: posts,
         message: "all posts",
@@ -129,7 +160,10 @@ export const getuserFeed = bigPromise(async (req: Request, res: Response) => {
                 belongsTo: { $in: req?.user?.followings.map(id => id) }
             }
         ]
-    }).sort({ createdAt: 'desc' })
+    }).populate({
+        path: 'comments',
+        populate: { path: 'user' }
+    }).populate('likes').populate('reposts').populate('belongsTo').sort({ createdAt: 'desc' })
 
 
     res.status(200).json({
@@ -161,3 +195,17 @@ export const followAndUnfollow = bigPromise(async (req: Request, res: Response) 
         message: "user followings updated",
     });
 });
+
+export const getNotFollowingUsers = bigPromise(async (req: Request, res: Response) => {
+    const loggedUser = await UserModel.findById(req.user?.id)
+    const followings = JSON.parse(JSON.stringify(loggedUser?.followings))
+
+    console.log(followings)
+
+    let getNotFollowingUsers = await UserModel.find({ _id: { $nin: [req.user?.id, ...followings] } })
+    res.status(200).json({
+        data: getNotFollowingUsers,
+        message: "list of users",
+    });
+});
+

@@ -86,6 +86,7 @@ const Left = ({ className }: { className: string }) => {
                 <img className='h-20 w-20 object-cover' src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
                 <div >
                     <p className='font-bold text-gray-500'> Abdus Samad</p>
+                    <button className='font-bold bg-gray-700 rounded-full text-white text-sm mt-2 py-2 px-4'>Visit Profile</button>
                 </div>
             </div>
 
