@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { BiPhotoAlbum, } from "react-icons/bi"
 import Card from "../Card"
 import { AiOutlineBell } from "react-icons/ai"
 import PostInput from "../PostInput"

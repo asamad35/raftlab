@@ -25,3 +25,38 @@ export const postLogin = createAsyncThunk("postLogout", async (payload: { passwo
     return data;
 });
 
+export const getNotFollowingUsers = createAsyncThunk("getNotFollowingUsers", async () => {
+    const { data } = await customAxios.get(API_URLS.getNotFollowingUsers)
+    if (data.data) {
+        // localStorage.setItem("raftLab", data.token + "");
+    } else {
+        toast.error(data.message);
+        throw new Error();
+    }
+    return data;
+});
+
+
+export const postFollowAndUnfollow = createAsyncThunk("postFollowAndUnfollow", async (payload: { otherUserId: string }) => {
+    const { data } = await customAxios.post(API_URLS.postFollowAndUnfollow, payload)
+    if (data.data) {
+        // localStorage.setItem("raftLab", data.token + "");
+    } else {
+        toast.error(data.message);
+        throw new Error();
+    }
+    return data;
+});
+
+
+export const getSearchUsers = createAsyncThunk("getSearchUsers", async (payload: { searchQuery: string }) => {
+    const { data } = await customAxios.get(API_URLS.getSearchUsers + `?search=${payload.searchQuery}`)
+    if (data.data) {
+        // localStorage.setItem("raftLab", data.token + "");
+    } else {
+        toast.error(data.message);
+        throw new Error();
+    }
+    return data;
+});
+

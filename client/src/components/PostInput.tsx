@@ -45,7 +45,7 @@ const PostInput = () => {
     return (
         <div className="flex flex-col w-full pb-6 border-b-2 border-gray-300 px-4 ">
             <div className="flex gap-4">
-                <img className='h-14 w-14 object-cover' src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
+                <img className='h-14 w-14 object-cover rounded-full' src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
                 <div className='flex flex-col w-full mb-4'>
                     <textarea onChange={e => setPostInput({ ...postInput, description: e.target.value })} value={postInput.description} className=" outline-none" placeholder="What's happening?" name="" id="" cols={15} rows={2}></textarea>
                     {previewImage && <img className='mt-4 h-36 object-contain' src={previewImage} alt="" />}

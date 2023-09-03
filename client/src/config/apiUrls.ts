@@ -13,5 +13,7 @@ const API_URLS = {
     postCreatePost: "user/create-post",
     postUpdatePost: "user/update-post",
     postFollowAndUnfollow: "user/follow-and-unfollow",
+    getNotFollowingUsers: "user/get-not-following-users",
+    getSearchUsers: "user/get-search-users",
 };
 export default API_URLS

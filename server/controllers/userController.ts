@@ -209,3 +209,25 @@ export const getNotFollowingUsers = bigPromise(async (req: Request, res: Respons
     });
 });
 
+
+export const getSearchUsers = bigPromise(async (req: Request, res: Response) => {
+    const dynamicRegex = new RegExp("^" + req.query.search);
+    const keyword = req.query.search
+        ? {
+            $and: [
+                {
+                    $or: [
+                        { name: { $regex: dynamicRegex, $options: "i" } },
+                        { email: { $regex: dynamicRegex, $options: "i" } },
+                    ],
+                },
+                { email: { $not: { $regex: req.user?.email, $options: "i" } } },
+            ],
+        }
+        : { email: "e" };
+
+    const users = await UserModel.find(keyword);
+
+
+    res.json({ data: users, message: "list of users" });
+});

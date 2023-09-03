@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { postLogin, postSignup } from '../thunk/authThunk'
+import { getNotFollowingUsers, getSearchUsers, postFollowAndUnfollow, postLogin, postSignup } from '../thunk/authThunk'
 
 // Define a type for the slice state
 
@@ -9,14 +9,17 @@ export interface UserState {
     email: string,
     status: string,
     photoUrl: string,
-    followers: [string],
-    followings: [string],
+    followers: string[],
+    followings: string[],
 }
 
 export interface AuthUserState {
     loggedUser: UserState
     token: string,
     authButtonState: string
+    notFollowingUsers: UserState[]
+    searchUsers: UserState[]
+
 }
 
 // Define the initial state using that type
@@ -31,7 +34,25 @@ const initialState: AuthUserState = {
         followings: [""],
     },
     token: "",
-    authButtonState: 'ideal'
+    authButtonState: 'ideal',
+    notFollowingUsers: [{
+        _id: "",
+        name: "",
+        email: "",
+        status: "",
+        photoUrl: "",
+        followers: [""],
+        followings: [""],
+    }],
+    searchUsers: [{
+        _id: "",
+        name: "",
+        email: "",
+        status: "",
+        photoUrl: "",
+        followers: [""],
+        followings: [""],
+    }]
 }
 export const authSlice = createSlice({
     name: 'user',
@@ -69,6 +90,45 @@ export const authSlice = createSlice({
             .addCase(postLogin.rejected, (state) => {
                 state.authButtonState = "idle";
             })
+
+            // get not following users
+            .addCase(getNotFollowingUsers.fulfilled, (state, action) => {
+                state.notFollowingUsers = action.payload.data;
+            })
+            // .addCase(getNotFollowingUsers.pending, (state) => {
+            //     state.authButtonState = "loading";
+            // })
+            // .addCase(getNotFollowingUsers.rejected, (state) => {
+            //     state.authButtonState = "idle";
+            // })
+
+            // follow and unfollow users
+            .addCase(postFollowAndUnfollow.fulfilled, (state, action) => {
+                const otherUserId = action.meta.arg.otherUserId
+                if (state.loggedUser.followings.includes(otherUserId)) {
+                    state.loggedUser.followings = state.loggedUser.followings.filter(id => id !== otherUserId)
+                } else {
+                    state.loggedUser.followings.push(otherUserId)
+                }
+            })
+            // .addCase(getNotFollowingUsers.pending, (state) => {
+            //     state.authButtonState = "loading";
+            // })
+            // .addCase(getNotFollowingUsers.rejected, (state) => {
+            //     state.authButtonState = "idle";
+            // })
+
+
+            // follow and unfollow users
+            .addCase(getSearchUsers.fulfilled, (state, action) => {
+                state.searchUsers = action.payload.data
+            })
+        // .addCase(getNotFollowingUsers.pending, (state) => {
+        //     state.authButtonState = "loading";
+        // })
+        // .addCase(getNotFollowingUsers.rejected, (state) => {
+        //     state.authButtonState = "idle";
+        // })
 
     },
 })

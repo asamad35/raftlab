@@ -4,7 +4,7 @@ import { BiSearch } from 'react-icons/bi';
 import { BsBell, BsEnvelope, BsPeople, } from 'react-icons/bs';
 import { RiFileListLine } from 'react-icons/ri';
 import { Link } from 'react-router-dom'
-import { useAppDispatch } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { logout as resetState } from '../../redux/slices/authSlice'
 
 interface SidebarButton {
@@ -17,6 +17,7 @@ interface SidebarButton {
 
 const Left = ({ className }: { className: string }) => {
     const dispatch = useAppDispatch()
+    const loggedUser = useAppSelector((state) => state.authReducer.loggedUser)
     const sidebarItems: SidebarButton[] = useMemo(() => [
         {
             title: 'Home',
@@ -83,9 +84,9 @@ const Left = ({ className }: { className: string }) => {
 
 
             <div className='flex px-4 items-center justify-center mt-auto gap-4'>
-                <img className='h-20 w-20 object-cover' src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
+                <img className='h-20 w-20 object-cover rounded-full bg-gray-300' src={loggedUser.photoUrl} alt="" />
                 <div >
-                    <p className='font-bold text-gray-500'> Abdus Samad</p>
+                    <p className='font-bold text-gray-500 pl-2'>{loggedUser.name}</p>
                     <button className='font-bold bg-gray-700 rounded-full text-white text-sm mt-2 py-2 px-4'>Visit Profile</button>
                 </div>
             </div>
