@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Mention, MentionsInput } from 'react-mentions';
 import { customAxios } from '../config/customAxios';
 import API_URLS from '../config/apiUrls'
+import { PostInput } from './PostInput';
+import { UserState } from '../redux/slices/authSlice';
 
 const mentionsInputStyle =
 {
@@ -68,14 +70,14 @@ const mentionStyle = {
 }
 
 
-const MentionInput = ({ setPostInput, postInput }) => {
+const MentionInput = ({ setPostInput, postInput }: { setPostInput: React.Dispatch<React.SetStateAction<PostInput>>, postInput: PostInput }) => {
     const [usersData, setUsersData] = useState([])
     const [localTextValue, setLocalTextValue] = useState("")
 
     useEffect(() => {
         customAxios.get(API_URLS.getAllUsers).then((data) => {
             let users = data.data.data
-            users = users.map((user) => ({ id: user._id, display: user.name }))
+            users = users.map((user: UserState) => ({ id: user._id, display: user.name }))
             setUsersData(users)
             console.log(users, 'dwdwdwdd')
         })
@@ -88,7 +90,7 @@ const MentionInput = ({ setPostInput, postInput }) => {
     }, [postInput])
 
 
-    const handleAddUserId = (e) => {
+    const handleAddUserId = (e: string) => {
         if (!postInput.tagUserIds.includes(e)) {
             setPostInput({ ...postInput, tagUserIds: [...postInput.tagUserIds, e] })
         }
@@ -110,7 +112,7 @@ const MentionInput = ({ setPostInput, postInput }) => {
                     style={mentionStyle}
                     data={usersData}
                     onAdd={handleAddUserId}
-                />
+                    trigger={'@'} />
             </MentionsInput>
         </div >
     );

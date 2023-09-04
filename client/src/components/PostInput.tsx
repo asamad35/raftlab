@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { BiPhotoAlbum } from 'react-icons/bi'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { postCreatePost } from '../redux/thunk/postThunk'
-import MentionInput from './MentionInput.jsx'
+import MentionInput from './MentionInput'
 
 export interface PostInput {
     description: string
