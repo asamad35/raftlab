@@ -60,3 +60,15 @@ export const getSearchUsers = createAsyncThunk("getSearchUsers", async (payload:
     return data;
 });
 
+
+export const getVisitedUserDetails = createAsyncThunk("getVisitedUserDetails", async (payload: { userId: string }) => {
+    const { data } = await customAxios.get(API_URLS.getVisitedUserDetails + `?userId=${payload.userId}`)
+    if (data.data) {
+        // localStorage.setItem("raftLab", data.token + "");
+    } else {
+        toast.error(data.message);
+        throw new Error();
+    }
+    return data;
+});
+

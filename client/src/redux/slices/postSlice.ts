@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getUserFeed, postCreatePost, postUpdatePost } from '../thunk/postThunk'
+import { getUserFeed, getUserPosts, postCreatePost, postUpdatePost } from '../thunk/postThunk'
 import { UserState } from './authSlice'
 
 // Define a type for the slice state
@@ -20,6 +20,7 @@ export interface SinglePostState {
 interface PostSliceState {
     allPosts: SinglePostState[]
     postLoaderState: boolean
+    visitedUserPosts: SinglePostState[]
 
 }
 
@@ -46,7 +47,28 @@ const initialState: PostSliceState = {
         },
         _id: '',
     }],
-    postLoaderState: false
+    postLoaderState: false,
+    visitedUserPosts: [{
+        description: '',
+        photoUrl: '',
+        likesCount: 0,
+        commentsCount: 0,
+        repostCount: 0,
+        likes: [],
+        reposts: [],
+        tagUsers: [],
+        comments: [],
+        belongsTo: {
+            _id: "",
+            name: "",
+            email: "",
+            status: "",
+            photoUrl: "",
+            followers: [""],
+            followings: [""],
+        },
+        _id: '',
+    }],
 }
 
 function replacePostById(array: SinglePostState[], id: string, newElement: SinglePostState): SinglePostState[] {
@@ -63,10 +85,10 @@ export const postSlice = createSlice({
     name: 'post',
     initialState,
     reducers: {
-        // logout: () => {
-        //     localStorage.removeItem("raftlab");
-        //     return initialState
-        // },
+        logout: () => {
+            localStorage.removeItem("raftlab");
+            return initialState
+        },
 
     }, extraReducers: (builder) => {
         builder
@@ -103,6 +125,18 @@ export const postSlice = createSlice({
 
 
             })
+            // .addCase(postUpdatePost.pending, (state) => {
+            // })
+            // .addCase(postUpdatePost.rejected, (state) => {
+            //     state.postLoaderState = false;
+            // })
+
+
+
+            // visited user posts
+            .addCase(getUserPosts.fulfilled, (state, action) => {
+                state.visitedUserPosts = action.payload.data
+            })
         // .addCase(postUpdatePost.pending, (state) => {
         // })
         // .addCase(postUpdatePost.rejected, (state) => {
@@ -114,7 +148,7 @@ export const postSlice = createSlice({
     },
 })
 
-// export const {  } = postSlice.actions
+export const { logout } = postSlice.actions
 
 
 export default postSlice.reducer

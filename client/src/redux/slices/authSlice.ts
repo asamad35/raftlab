@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getNotFollowingUsers, getSearchUsers, postFollowAndUnfollow, postLogin, postSignup } from '../thunk/authThunk'
+import { getNotFollowingUsers, getSearchUsers, getVisitedUserDetails, postFollowAndUnfollow, postLogin, postSignup } from '../thunk/authThunk'
 
 // Define a type for the slice state
 
@@ -19,6 +19,7 @@ export interface AuthUserState {
     authButtonState: string
     notFollowingUsers: UserState[]
     searchUsers: UserState[]
+    visitedUser: UserState
 
 }
 
@@ -52,7 +53,16 @@ const initialState: AuthUserState = {
         photoUrl: "",
         followers: [""],
         followings: [""],
-    }]
+    }],
+    visitedUser: {
+        _id: "",
+        name: "",
+        email: "",
+        status: "",
+        photoUrl: "",
+        followers: [""],
+        followings: [""],
+    }
 }
 export const authSlice = createSlice({
     name: 'user',
@@ -122,6 +132,18 @@ export const authSlice = createSlice({
             // follow and unfollow users
             .addCase(getSearchUsers.fulfilled, (state, action) => {
                 state.searchUsers = action.payload.data
+            })
+            // .addCase(getNotFollowingUsers.pending, (state) => {
+            //     state.authButtonState = "loading";
+            // })
+            // .addCase(getNotFollowingUsers.rejected, (state) => {
+            //     state.authButtonState = "idle";
+            // })
+
+
+            // visited user details
+            .addCase(getVisitedUserDetails.fulfilled, (state, action) => {
+                state.visitedUser = action.payload.data
             })
         // .addCase(getNotFollowingUsers.pending, (state) => {
         //     state.authButtonState = "loading";

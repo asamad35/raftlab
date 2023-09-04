@@ -71,6 +71,16 @@ export const getUserDetails = bigPromise(async (req: Request, res: Response) => 
     });
 });
 
+export const getVisitedUserDetails = bigPromise(async (req: Request, res: Response) => {
+    const { userId } = req.query;
+    let user = await UserModel.findById(userId).populate("followers").populate("followings")
+
+    res.status(200).json({
+        data: user,
+        message: "visited user data",
+    });
+});
+
 export const createPost = bigPromise(async (req: Request, res: Response) => {
     let { description, postPhotoUrl, tagUsersIds } = req.body;
 
@@ -141,14 +151,15 @@ export const updatePost = bigPromise(async (req: Request, res: Response) => {
 });
 
 export const getUserPosts = bigPromise(async (req: Request, res: Response) => {
-    let posts = await PostModel.find({ belongsTo: req?.user?.id }).populate({
+    console.log(req?.query?.userId, 'ddaaa')
+    let posts = await PostModel.find({ belongsTo: req?.query?.userId }).sort({ createdAt: 'desc' }).populate({
         path: 'comments',
         populate: { path: 'user' }
     }).populate('likes').populate('reposts').populate('belongsTo')
 
     res.status(200).json({
         data: posts,
-        message: "all posts",
+        message: "user posts",
     });
 });
 

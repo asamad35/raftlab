@@ -24,7 +24,7 @@ const Mid = ({ className }: { className: string }) => {
             {/* input end*/}
 
             {/* card start */}
-            {allPosts.map((post) => <Card post={post} />)}
+            {allPosts?.map((post) => <Card post={post} />)}
             {/* card end */}
 
         </div>

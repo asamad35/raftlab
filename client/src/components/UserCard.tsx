@@ -14,7 +14,7 @@ const UserCard = ({ user }: { user: UserState }) => {
 
     }
     return (
-        <div className='flex items-center my-2 gap-4'>
+        user.email && <div className='flex items-center my-2 gap-4'>
             <img className='h-12 w-12 object-cover rounded-full' src={user.photoUrl} alt="" />
 
             <p>
@@ -23,6 +23,7 @@ const UserCard = ({ user }: { user: UserState }) => {
             </p>
             <button onClick={followAndUnfollow} className='px-4 rounded-full bg-gray-700 text-white text-sm py-2'>{handleIsFollowing() ? "Following" : "Follow"}</button>
         </div>
+
     )
 }
 

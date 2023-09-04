@@ -5,6 +5,7 @@ import ProtectedRoute from './utils/ProtectedRoute';
 import AuthRoute from './utils/AuthRoute';
 import Login from './components/Auth/Login';
 import Signup from './components/Auth/Signup';
+import UserProfile from './components/UserProfile/UserProfile';
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route element={<Home />} path="/" />
+          <Route element={<UserProfile />} path="/user/:id" />
         </Route>
       </Routes>
     </BrowserRouter>

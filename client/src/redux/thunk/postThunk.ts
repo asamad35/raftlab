@@ -28,8 +28,19 @@ export const getUserFeed = createAsyncThunk("getUserFeed", async () => {
     return data;
 });
 
-export const postUpdatePost = createAsyncThunk("postUpdatePost", async (payload: PostAction) => {
-    const { data } = await customAxios.post(API_URLS.postUpdatePost, payload)
+export const postUpdatePost = createAsyncThunk("postUpdatePost", async ({ action, userId }: { action: PostAction, userId: string }, thunkAPI) => {
+    const { data } = await customAxios.post(API_URLS.postUpdatePost, action)
+    if (data.data) {
+        thunkAPI.dispatch(getUserPosts({ userId }));
+    } else {
+        toast.error(data.message);
+        throw new Error();
+    }
+    return data;
+});
+
+export const getUserPosts = createAsyncThunk("getUserPosts", async (payload: { userId: string }) => {
+    const { data } = await customAxios.get(API_URLS.getUserPosts + `?userId=${payload.userId}`)
     if (data.data) {
         // do someething
     } else {

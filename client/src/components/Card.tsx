@@ -5,6 +5,8 @@ import { FaRegComment } from 'react-icons/fa'
 import { SinglePostState } from '../redux/slices/postSlice'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { postCreatePost, postUpdatePost } from '../redux/thunk/postThunk'
+import { useParams } from 'react-router'
+import { Link } from 'react-router-dom'
 
 
 enum Actions {
@@ -26,10 +28,14 @@ const Card = ({ post }: { post: SinglePostState }) => {
     const loggedUser = useAppSelector((state) => state.authReducer.loggedUser)
     const [showComments, setShowComments] = useState(false)
     const [inputComment, setInputComment] = useState("")
+    const params = useParams();
+    const userIdFromUrl = params.id as string
+
+    console.log({ userIdFromUrl })
 
     const action: PostAction = {
         actionType: Actions.Default,
-        userId: post.belongsTo._id,
+        userId: loggedUser._id,
         postId: post._id,
         comment: ""
     }
@@ -38,10 +44,9 @@ const Card = ({ post }: { post: SinglePostState }) => {
     const handleButtonActions = (e: React.MouseEvent<HTMLElement>) => {
         const element = e.target as HTMLElement
 
-
         if (element.classList.contains('like')) {
             action.actionType = Actions.Like
-            dispatch(postUpdatePost(action))
+            dispatch(postUpdatePost({ action, userId: userIdFromUrl }))
         }
         else if (element.classList.contains('comment')) {
             setShowComments(!showComments)
@@ -54,16 +59,20 @@ const Card = ({ post }: { post: SinglePostState }) => {
             formData.append("description", post.description);
 
             dispatch(postCreatePost({ formData, resetInputState: '', resetPreviewState: '' }))
-            dispatch(postUpdatePost(action))
+            dispatch(postUpdatePost({ action, userId: userIdFromUrl }))
         }
+
+
     }
 
     const handleAddComment = (e: React.KeyboardEvent<HTMLElement>) => {
         if (e.key === "Enter") {
             action.actionType = Actions.Comment
             action.comment = inputComment
-            dispatch(postUpdatePost(action))
+            dispatch(postUpdatePost({ action, userId: userIdFromUrl }))
             setInputComment('')
+
+
         }
     }
     return (
@@ -71,7 +80,7 @@ const Card = ({ post }: { post: SinglePostState }) => {
             <div className="flex flex-col w-full">
                 <div className="flex gap-4 items-center mb-2">
                     <img className='h-14 w-14 object-cover bg-gray-300 rounded-full' src={post.belongsTo.photoUrl} alt="" />
-                    <h2 className="font-semibold">{post.belongsTo.name}</h2>
+                    <Link to={`/user/${post.belongsTo._id}`}> <h2 className="font-semibold">{post.belongsTo.name}</h2> </Link>
                     <span className="text-sm">09/03/2023</span>
                 </div>
                 {post.photoUrl && post.photoUrl !== "undefined" && <img className="w-full h-72 object-contain bg-gray-300" src={post.photoUrl} alt="" />}

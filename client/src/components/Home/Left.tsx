@@ -5,7 +5,8 @@ import { BsBell, BsEnvelope, BsPeople, } from 'react-icons/bs';
 import { RiFileListLine } from 'react-icons/ri';
 import { Link } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { logout as resetState } from '../../redux/slices/authSlice'
+import { logout as resetAuthState } from '../../redux/slices/authSlice'
+import { logout as resetPostState } from '../../redux/slices/postSlice'
 
 interface SidebarButton {
     title: string,
@@ -68,7 +69,8 @@ const Left = ({ className }: { className: string }) => {
 
         , [])
     const logout = useCallback(() => {
-        dispatch(resetState())
+        dispatch(resetAuthState())
+        dispatch(resetPostState())
     }, [dispatch])
     return (
         <div className={className}>
@@ -87,7 +89,7 @@ const Left = ({ className }: { className: string }) => {
                 <img className='h-20 w-20 object-cover rounded-full bg-gray-300' src={loggedUser.photoUrl} alt="" />
                 <div >
                     <p className='font-bold text-gray-500 pl-2'>{loggedUser.name}</p>
-                    <button className='font-bold bg-gray-700 rounded-full text-white text-sm mt-2 py-2 px-4'>Visit Profile</button>
+                    <Link to={`/user/${loggedUser._id}`}> <button className='font-bold bg-gray-700 rounded-full text-white text-sm mt-2 py-2 px-4'>Visit Profile</button> </Link>
                 </div>
             </div>
 
