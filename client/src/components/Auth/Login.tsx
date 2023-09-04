@@ -11,7 +11,7 @@ interface UserDetails {
 }
 
 const Login = () => {
-  const [userDetails, setUserDetails] = useState<UserDetails>({ email: "samad.abdus3535@gmail.com", password: "123456" })
+  const [userDetails, setUserDetails] = useState<UserDetails>({ email: "raftlabs@gmail.com", password: "123456" })
   const dispatch = useAppDispatch()
   const authButtonStatus = useAppSelector((state) => state.authReducer.authButtonState)
   const navigate = useNavigate()
