@@ -2,8 +2,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-:root {
-  font-family: 'Montserrat', sans-serif;
+* {
+  font-family: 'Montserrat', sans-serif !important;
 }
 
 /* width */
@@ -20,4 +20,12 @@
 ::-webkit-scrollbar-thumb {
   background: #b4b3b3; 
   border-radius: 10px;
+}
+
+textarea:focus, input:focus{
+  outline: none;
+}
+
+.mention-input > div > div > div{
+  max-height: 70px !important;
 }

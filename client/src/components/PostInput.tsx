@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react'
 import { BiPhotoAlbum } from 'react-icons/bi'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { postCreatePost } from '../redux/thunk/postThunk'
-
+import MentionInput from './MentionInput.jsx'
 
 export interface PostInput {
     description: string
     file: File | string
+    tagUserIds: string[]
 }
 
 
@@ -15,7 +16,7 @@ const PostInput = () => {
     const dispatch = useAppDispatch()
     const postLoaderState = useAppSelector((state) => state.postReducer.postLoaderState)
 
-    const [postInput, setPostInput] = useState<PostInput>({ description: "", file: '' })
+    const [postInput, setPostInput] = useState<PostInput>({ description: "", file: '', tagUserIds: [] })
     const [previewImage, setPreviewImage] = useState("")
 
     const handleFile = () => {
@@ -47,7 +48,8 @@ const PostInput = () => {
             <div className="flex gap-4">
                 <img className='h-14 w-14 object-cover rounded-full' src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
                 <div className='flex flex-col w-full mb-4'>
-                    <textarea onChange={e => setPostInput({ ...postInput, description: e.target.value })} value={postInput.description} className=" outline-none" placeholder="What's happening?" name="" id="" cols={15} rows={2}></textarea>
+                    <MentionInput postInput={postInput} setPostInput={setPostInput} />
+                    {/* <textarea onChange={e => setPostInput({ ...postInput, description: e.target.value })} value={postInput.description} className=" outline-none" placeholder="What's happening?" name="" id="" cols={15} rows={2}></textarea> */}
                     {previewImage && <img className='mt-4 h-36 object-contain' src={previewImage} alt="" />}
                 </div>
             </div>
@@ -58,6 +60,7 @@ const PostInput = () => {
                         const formData = new FormData();
                         formData.append("postPhoto", postInput.file);
                         formData.append("description", postInput.description);
+                        formData.append("tagUserIds", JSON.stringify(postInput.tagUserIds));
 
                         dispatch(postCreatePost({ formData, resetInputState: setPostInput, resetPreviewState: setPreviewImage }))
                     }

@@ -16,5 +16,6 @@ const API_URLS = {
     getNotFollowingUsers: "user/get-not-following-users",
     getSearchUsers: "user/get-search-users",
     getVisitedUserDetails: "user/get-visited-user-details",
+    getAllUsers: "user/get-all-users",
 };
 export default API_URLS

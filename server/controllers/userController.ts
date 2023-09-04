@@ -82,8 +82,8 @@ export const getVisitedUserDetails = bigPromise(async (req: Request, res: Respon
 });
 
 export const createPost = bigPromise(async (req: Request, res: Response) => {
-    let { description, postPhotoUrl, tagUsersIds } = req.body;
-
+    let { description, postPhotoUrl, tagUserIds } = req.body;
+    tagUserIds = JSON.parse(tagUserIds)
     let uploadedFileObject = null
 
     if (req.files) {
@@ -99,8 +99,10 @@ export const createPost = bigPromise(async (req: Request, res: Response) => {
     }
 
     console.log(uploadedFileObject?.secure_url)
-
-    const post = await PostModel.create({ description, photoUrl: uploadedFileObject?.secure_url ?? postPhotoUrl, belongsTo: req?.user?.id, tagUsers: tagUsersIds })
+    const post = await PostModel.create({
+        description,
+        photoUrl: uploadedFileObject?.secure_url ?? postPhotoUrl, belongsTo: req?.user?.id, tagUserIds
+    })
 
     let populatedPost = await PostModel.findById(post._id).populate({
         path: 'comments',
@@ -242,3 +244,10 @@ export const getSearchUsers = bigPromise(async (req: Request, res: Response) => 
 
     res.json({ data: users, message: "list of users" });
 });
+
+export const getAllUsers = bigPromise(async (req: Request, res: Response) => {
+    const users = await UserModel.find({});
+
+    res.json({ data: users, message: "all users" });
+});
+

@@ -69,6 +69,8 @@ const userSchema = new mongoose.Schema<User, UserModel, UserMethods>({
     required: true,
   }],
 
+
+
 }, { timestamps: true });
 
 // hash pass before save

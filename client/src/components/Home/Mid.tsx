@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import Card from "../Card"
 import { AiOutlineBell } from "react-icons/ai"
 import PostInput from "../PostInput"
+import MentionInput from '../MentionInput.jsx'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { getUserFeed } from '../../redux/thunk/postThunk'
 
@@ -21,6 +22,7 @@ const Mid = ({ className }: { className: string }) => {
 
             {/* input start*/}
             <PostInput />
+            {/* <MentionInput /> */}
             {/* input end*/}
 
             {/* card start */}

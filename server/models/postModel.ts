@@ -12,7 +12,7 @@ interface Post {
     commentsCount: number
     repostCount: number
     belongsTo: User
-    tagUsers: [User]
+    tagUserIds: [User]
 }
 
 type PostModel = mongoose.Model<Post, {}>;
@@ -61,7 +61,7 @@ const postSchema = new mongoose.Schema<Post, PostModel>({
         ref: "User",
         required: true,
     }],
-    tagUsers: [{
+    tagUserIds: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,

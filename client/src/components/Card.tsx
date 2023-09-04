@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai'
 import { BiRepost } from 'react-icons/bi'
 import { FaRegComment } from 'react-icons/fa'
@@ -7,6 +7,10 @@ import { useAppDispatch, useAppSelector } from '../hooks'
 import { postCreatePost, postUpdatePost } from '../redux/thunk/postThunk'
 import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
+import API_URLS from '../config/apiUrls'
+import { customAxios } from '../config/customAxios'
+import { UserState } from '../redux/slices/authSlice'
+import ReactHtmlParser from 'html-react-parser';
 
 
 enum Actions {
@@ -25,13 +29,19 @@ export interface PostAction {
 
 const Card = ({ post }: { post: SinglePostState }) => {
     const dispatch = useAppDispatch()
+    const [allUsersData, setAllUsersData] = useState<UserState[]>([])
     const loggedUser = useAppSelector((state) => state.authReducer.loggedUser)
     const [showComments, setShowComments] = useState(false)
     const [inputComment, setInputComment] = useState("")
     const params = useParams();
     const userIdFromUrl = params.id as string
 
-    console.log({ userIdFromUrl })
+    useEffect(() => {
+        customAxios.get(API_URLS.getAllUsers).then((data) => {
+            const users: UserState[] = data.data.data
+            setAllUsersData(users)
+        })
+    }, [])
 
     const action: PostAction = {
         actionType: Actions.Default,
@@ -75,6 +85,43 @@ const Card = ({ post }: { post: SinglePostState }) => {
 
         }
     }
+
+    const getPostDescription = () => {
+        const postDescription = post.description;
+
+        // eslint-disable-next-line no-useless-escape
+        const mentionPattern = /\@\[([^\]]+)\]\(([^)]+)\)/g;
+
+        // Replace mentions from the array with <p> and </p> tags
+        const replacedDescription = postDescription.replace(mentionPattern, (match, userName, id) => {
+            if (allUsersData.find((el) => el.name === userName)) {
+                return `<a class="font-bold text-blue-500" href=user/${id}>${"@" + userName}</a>`;
+            } else {
+                return match; // If not found in the array, keep the original mention
+            }
+        });
+
+
+        // Replace <a> tags with Link components
+        const replacedString = ReactHtmlParser(replacedDescription, {
+            replace: (node) => {
+                if (node.type === 'tag' && node.name === 'a' && node.attribs.href) {
+                    const url = node.attribs.href;
+                    const text = ReactHtmlParser(node.children[0].data);
+                    const className = node.attribs.class || ''; // Get className if available
+                    return <Link className={className} to={url}>{text}</Link>;
+                }
+                return undefined;
+            },
+        });
+
+        return (
+            <p>{replacedString}</p>
+        );
+        return replacedString
+    }
+
+
     return (
         <div key={post._id} className="flex gap-4 px-4 border-b-2 py-8 border-gray-300 w-full">
             <div className="flex flex-col w-full">
@@ -84,7 +131,7 @@ const Card = ({ post }: { post: SinglePostState }) => {
                     <span className="text-sm">09/03/2023</span>
                 </div>
                 {post.photoUrl && post.photoUrl !== "undefined" && <img className="w-full h-72 object-contain bg-gray-300" src={post.photoUrl} alt="" />}
-                <p className="my-4">{post.description}
+                <p className="my-4">{getPostDescription()}
                 </p>
 
                 <div onClick={handleButtonActions} className="flex gap-4">
@@ -125,5 +172,4 @@ const Card = ({ post }: { post: SinglePostState }) => {
         </div>
     )
 }
-
 export default Card

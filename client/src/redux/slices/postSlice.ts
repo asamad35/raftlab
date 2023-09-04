@@ -97,7 +97,7 @@ export const postSlice = createSlice({
                 state.allPosts.unshift(action.payload.data);
                 state.postLoaderState = false;
                 console.log({ action })
-                action.meta.arg?.resetInputState && typeof action.meta.arg?.resetInputState !== 'string' && action.meta.arg?.resetInputState({ description: "", file: '' })
+                action.meta.arg?.resetInputState && typeof action.meta.arg?.resetInputState !== 'string' && action.meta.arg?.resetInputState({ description: "", file: '', tagUserIds: [] })
                 action.meta.arg?.resetPreviewState && typeof action.meta.arg?.resetPreviewState !== 'string' && action.meta.arg?.resetPreviewState("")
             })
             .addCase(postCreatePost.pending, (state) => {
