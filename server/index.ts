@@ -4,7 +4,6 @@ import connectWithDb from "./config";
 import { User } from "./models/userModel";
 import { v2 as cloudinary } from 'cloudinary';
 
-const port = process.env.port;
 
 // connect with database
 connectWithDb();
@@ -35,7 +34,6 @@ cloudinary.config({
     secure: true,
 });
 
-app.listen(3001, () => {
-    console.log(`server is running at port 3001`);
+app.listen(process.env.PORT, () => {
+    console.log(`Listening on port ${process.env.PORT}`);
 });
-export { };
