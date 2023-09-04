@@ -247,7 +247,27 @@ export const getSearchUsers = bigPromise(async (req: Request, res: Response) => 
 
 export const getAllUsers = bigPromise(async (req: Request, res: Response) => {
     const users = await UserModel.find({});
-
     res.json({ data: users, message: "all users" });
+});
+
+export const updateUserProfile = bigPromise(async (req: Request, res: Response) => {
+    let { status } = req.body;
+    let uploadedFileObject = null
+    if (req.files) {
+        const userProfilePhoto = req.files.userProfilePhoto as UploadedFile
+
+        console.log(userProfilePhoto)
+        uploadedFileObject = await cloudinary.uploader.upload(
+            userProfilePhoto.tempFilePath,
+            {
+                folder: "raftlab/users",
+            }
+        );
+    }
+
+    console.log(uploadedFileObject?.secure_url)
+    const user = await UserModel.findByIdAndUpdate(req.user?.id, { photoUrl: uploadedFileObject?.secure_url, status }, { returnDocument: "after" })
+    res.json({ data: user, message: "updated user profile" });
+
 });
 

@@ -70,9 +70,8 @@ const mentionStyle = {
 }
 
 
-const MentionInput = ({ setPostInput, postInput }: { setPostInput: React.Dispatch<React.SetStateAction<PostInput>>, postInput: PostInput }) => {
+const MentionInput = ({ postInputText, setPostInputText, setPostInput, postInput }: { setPostInput: React.Dispatch<React.SetStateAction<PostInput>>, postInput: PostInput, setPostInputText: React.Dispatch<React.SetStateAction<string>>, postInputText: string }) => {
     const [usersData, setUsersData] = useState([])
-    const [localTextValue, setLocalTextValue] = useState("")
 
     useEffect(() => {
         customAxios.get(API_URLS.getAllUsers).then((data) => {
@@ -82,12 +81,6 @@ const MentionInput = ({ setPostInput, postInput }: { setPostInput: React.Dispatc
             console.log(users, 'dwdwdwdd')
         })
     }, [])
-
-    useEffect(() => {
-        if (postInput.description === "") {
-            setLocalTextValue("")
-        }
-    }, [postInput])
 
 
     const handleAddUserId = (e: string) => {
@@ -101,10 +94,11 @@ const MentionInput = ({ setPostInput, postInput }: { setPostInput: React.Dispatc
         <div className={" w-full h-[70px] mention-input "}>
             <MentionsInput
                 style={mentionsInputStyle}
-                value={localTextValue}
+                value={postInputText}
                 onChange={(e) => {
-                    setLocalTextValue(e.target.value)
-                    setPostInput({ ...postInput, description: e.target.value })
+                    console.log(e.target.value, 'aaaa')
+                    setPostInput({ ...postInput })
+                    setPostInputText(e.target.value)
                 }} >
 
 

@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema<User, UserModel, UserMethods>({
   },
   status: {
     type: String,
-    default: "Hi! I am using SocioPlus",
+    default: "Hi, I am on social Bowl",
   },
   photoUrl: {
     type: String,

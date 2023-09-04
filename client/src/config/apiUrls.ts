@@ -17,5 +17,6 @@ const API_URLS = {
     getSearchUsers: "user/get-search-users",
     getVisitedUserDetails: "user/get-visited-user-details",
     getAllUsers: "user/get-all-users",
+    postUpdateUserProfile: "user/update-user-profile",
 };
 export default API_URLS

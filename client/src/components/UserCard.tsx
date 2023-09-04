@@ -21,7 +21,7 @@ const UserCard = ({ user }: { user: UserState }) => {
                 <h3>{user.name}</h3>
                 <h3 className='text-xs max-w-[100px] break-words'>{user.email}</h3>
             </p>
-            <button onClick={followAndUnfollow} className='px-4 rounded-full bg-gray-700 text-white text-sm py-2'>{handleIsFollowing() ? "Following" : "Follow"}</button>
+            <button onClick={followAndUnfollow} className='px-4 rounded-full bg-gray-700 text-white text-sm py-2'>{handleIsFollowing() ? "Unfollow" : "Follow"}</button>
         </div>
 
     )

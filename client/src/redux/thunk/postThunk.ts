@@ -6,7 +6,7 @@ import API_URLS from "../../config/apiUrls";
 import { PostAction } from "../../components/Card";
 import { PostInput } from "../../components/PostInput";
 
-export const postCreatePost = createAsyncThunk("postCreatePost", async (payload: { formData: unknown, resetInputState: React.Dispatch<React.SetStateAction<PostInput>> | string, resetPreviewState: React.Dispatch<React.SetStateAction<string>> | string }) => {
+export const postCreatePost = createAsyncThunk("postCreatePost", async (payload: { formData: unknown, resetPostInputState: React.Dispatch<React.SetStateAction<string>>, resetInputState: React.Dispatch<React.SetStateAction<PostInput>> | string, resetPreviewState: React.Dispatch<React.SetStateAction<string>> | string }) => {
     const { data } = await customAxios.post(API_URLS.postCreatePost, payload?.formData)
     if (data.data) {
         // do someething

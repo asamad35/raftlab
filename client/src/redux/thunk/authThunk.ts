@@ -72,3 +72,15 @@ export const getVisitedUserDetails = createAsyncThunk("getVisitedUserDetails", a
     return data;
 });
 
+
+export const postUpdateUserProfile = createAsyncThunk("postUpdateUserProfile", async (payload: { formData: unknown }) => {
+    const { data } = await customAxios.post(API_URLS.postUpdateUserProfile, payload.formData)
+    if (data.data) {
+        // localStorage.setItem("raftLab", data.token + "");
+    } else {
+        toast.error(data.message);
+        throw new Error();
+    }
+    return data;
+});
+

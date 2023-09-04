@@ -67,6 +67,7 @@ const Card = ({ post }: { post: SinglePostState }) => {
             const formData = new FormData();
             formData.append("postPhotoUrl", post.photoUrl);
             formData.append("description", post.description);
+            formData.append("tagUserIds", JSON.stringify([]));
 
             dispatch(postCreatePost({ formData, resetInputState: '', resetPreviewState: '' }))
             dispatch(postUpdatePost({ action, userId: userIdFromUrl }))
@@ -94,13 +95,17 @@ const Card = ({ post }: { post: SinglePostState }) => {
 
         // Replace mentions from the array with <p> and </p> tags
         const replacedDescription = postDescription.replace(mentionPattern, (match, userName, id) => {
+            // console.log({ match, userName, id }, 'qaqaq')
+
             if (allUsersData.find((el) => el.name === userName)) {
                 return `<a class="font-bold text-blue-500" href=user/${id}>${"@" + userName}</a>`;
+                // return `<p>${userName}</p>`;
             } else {
                 return match; // If not found in the array, keep the original mention
             }
         });
 
+        // console.log(replacedDescription, 'mmmmmm', allUsersData)
 
         // Replace <a> tags with Link components
         const replacedString = ReactHtmlParser(replacedDescription, {
@@ -118,7 +123,6 @@ const Card = ({ post }: { post: SinglePostState }) => {
         return (
             <p>{replacedString}</p>
         );
-        return replacedString
     }
 
 
