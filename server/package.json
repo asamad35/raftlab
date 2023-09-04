@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node index.ts",
-    "dev": "nodemon index.ts"
+    "dev": "nodemon index.ts",
+    "build":"tsc" ,
+    "prodstart": "node ./dist/index.js"
   },
   "author": "Abdus Samad",
   "license": "ISC",
